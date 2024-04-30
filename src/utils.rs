@@ -5,7 +5,7 @@ pub fn save(profile: &Profile) {
     let storage = window.local_storage().unwrap().unwrap();
 
     let profile_str = serde_json::to_string(&profile).unwrap();
-    storage.set("profile", &profile_str);
+    let _ = storage.set("profile", &profile_str);
 }
 
 pub fn load() -> Profile {
@@ -22,4 +22,14 @@ pub fn load() -> Profile {
     save(&profile);
 
     profile
+}
+
+/// Handles opening link
+pub fn open_link(link: &str, new_tab: bool) {
+    let target = if new_tab { "_blank" } else { "" };
+
+    let _window = web_sys::window()
+        .unwrap()
+        .window()
+        .open_with_url_and_target(link, target);
 }

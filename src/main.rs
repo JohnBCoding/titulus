@@ -13,7 +13,6 @@ mod prelude {
     pub use serde::{Deserialize, Serialize};
     pub use std::collections::HashMap;
     pub use std::ops::Deref;
-    pub use wasm_bindgen::JsValue;
     pub use web_sys::{HtmlButtonElement, HtmlDivElement, HtmlInputElement, HtmlSelectElement};
     pub use yew::prelude::*;
     pub use yew_router::prelude::*;

@@ -209,8 +209,10 @@ input:focus {
     }
 
     .settings-container {
-        width: 1008px;
-        height: 307px;
+        min-width: 1008px;
+        min-height: 307px;
+        max-width: 1008px;
+        max-height: 307px;
         margin-top: 0;
         margin-bottom: 27em;
     }

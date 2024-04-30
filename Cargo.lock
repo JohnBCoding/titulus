@@ -1005,16 +1005,13 @@ dependencies = [
 
 [[package]]
 name = "titulus"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
- "getrandom",
  "gloo 0.8.1",
  "gloo-console 0.2.3",
  "gloo-timers 0.2.6",
  "serde",
  "serde_json",
- "wasm-bindgen",
- "wasm-bindgen-futures",
  "web-sys",
  "yew",
  "yew-nested-router",

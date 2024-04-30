@@ -49,13 +49,13 @@ pub fn content() -> Html {
         })
     };
 
+    // Checks if main is hovered then displays the open/close settings text
     let handle_on_hover_settings = {
         let settings_state = settings_state.clone();
         let input_ref = input_ref.clone();
         Callback::from(move |event: MouseEvent| {
             let target = event.target_unchecked_into::<HtmlDivElement>();
             let input = input_ref.cast::<HtmlInputElement>().unwrap();
-            log!(target.id());
             if target.id() != "" {
                 if !*settings_state {
                     input.set_value("Open Settings");
@@ -103,13 +103,13 @@ pub fn content() -> Html {
                     match &command.command_type {
                         CommandType::Empty => {}
                         CommandType::Link(link) => {
-                            // Open link in new window
-                            let _window = web_sys::window()
-                                .unwrap()
-                                .window()
-                                .open_with_url_and_target(link, "_blank");
+                            open_link(link, true);
                         }
                     }
+                } else {
+                    // No command, so search instead
+                    let search_link = profile_state.search_template.replace("{}", &input.value());
+                    open_link(&search_link, true);
                 }
 
                 input.set_value("");

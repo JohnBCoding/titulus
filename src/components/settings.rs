@@ -50,6 +50,21 @@ pub fn settings(props: &Props) -> Html {
         })
     };
 
+    let handle_on_change_search = {
+        let profile = props.profile.clone();
+        let update_profile = props.update_profile.clone();
+        Callback::from(move |event: Event| {
+            event.prevent_default();
+
+            let value = event.target_unchecked_into::<HtmlInputElement>().value();
+            let mut profile = profile.clone();
+            profile.search_template = value;
+
+            save(&profile);
+            update_profile.emit(profile);
+        })
+    };
+
     let handle_on_change_value = {
         let profile = props.profile.clone();
         let command_index_state = command_index_state.clone();
@@ -81,6 +96,10 @@ pub fn settings(props: &Props) -> Html {
         let update_profile = props.update_profile.clone();
         Callback::from(move |event: KeyboardEvent| {
             event.prevent_default();
+
+            if event.key() == "Enter" {
+                return;
+            }
 
             let input = event.target_unchecked_into::<HtmlInputElement>();
             let mut key = event.key();
@@ -136,6 +155,7 @@ pub fn settings(props: &Props) -> Html {
                 />
                 <input value={format!("{}", &props.profile.commands[*command_index_state].hotkey)} placeholder="Hotkey" onkeypress={&handle_hotkey_key_press} />
             </div>
+            <input value={format!("{}", &props.profile.search_template)} class="flex-end-y" placeholder="Search Template" onchange={&handle_on_change_search} />
         </div>
     }
 }
