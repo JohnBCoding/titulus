@@ -11,9 +11,8 @@ mod prelude {
     pub use gloo_console::log;
     pub use gloo_timers::callback::Timeout;
     pub use serde::{Deserialize, Serialize};
-    pub use std::collections::HashMap;
     pub use std::ops::Deref;
-    pub use web_sys::{HtmlButtonElement, HtmlDivElement, HtmlInputElement, HtmlSelectElement};
+    pub use web_sys::{HtmlDivElement, HtmlInputElement, HtmlSelectElement};
     pub use yew::prelude::*;
     pub use yew_router::prelude::*;
 }

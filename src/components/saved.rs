@@ -27,6 +27,6 @@ pub fn saved(props: &Props) -> Html {
     };
 
     html! {
-        <button onclick={&handle_on_click}><span>{format!("<{}>", &props.command.hotkey)}</span>{&props.command.name}</button>
+        <button class={if props.command.highlight {"highlight"} else {""}} onclick={&handle_on_click}><span>{format!("<{}>", &props.command.hotkey)}</span>{&props.command.name}</button>
     }
 }

@@ -88,7 +88,7 @@ pub fn content() -> Html {
 
             let input = input_ref.cast::<HtmlInputElement>().unwrap();
             if input.value() == "Open Settings" {
-                input.set_value("")
+                input.set_value("");
             }
 
             // Find if any command is tied value
@@ -117,7 +117,17 @@ pub fn content() -> Html {
         })
     };
 
-    let handle_focus_hotkeys = {
+    let handle_hotkeys_highlight = {
+        let profile_state = profile_state.clone();
+        Callback::from(move |event: KeyboardEvent| {
+            let value = event.target_unchecked_into::<HtmlInputElement>().value();
+            let mut profile = profile_state.deref().clone();
+            profile.check_hotkey(&value);
+            profile_state.set(profile);
+        })
+    };
+
+    let handle_hotkeys_focus = {
         let mobile_state = mobile_state.clone();
         let settings_state = settings_state.clone();
         let input_ref = input_ref.clone();
@@ -139,7 +149,7 @@ pub fn content() -> Html {
     html! {
         <main class="col expand-x expand-y fade-in">
             <div id="main" class="main-container col expand-x expand-y" onclick={&handle_on_click_settings} onmouseover={&handle_on_hover_settings}>
-                <input id="hotkey-input" class="flex-center-x" onkeydown={&handle_hotkeys} onblur={&handle_focus_hotkeys} ref={input_ref}/>
+                <input id="hotkey-input" class="flex-center-x" onkeydown={&handle_hotkeys} onkeyup={&handle_hotkeys_highlight} onblur={&handle_hotkeys_focus} ref={input_ref}/>
                 if !*settings_state {
                     <Commands mobile={mobile_state.deref().clone()} profile={profile_state.deref().clone()} />
                 } else {

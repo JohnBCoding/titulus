@@ -17,4 +17,14 @@ impl Profile {
             search_template: "https://duckduckgo.com/?q={}".to_string(),
         }
     }
+
+    /// Checks if hotkey matches any command, highlights it if so
+    pub fn check_hotkey(&mut self, hotkey: &str) {
+        self.commands.iter_mut().for_each(|command| {
+            command.highlight = false;
+            if command.hotkey == hotkey && !hotkey.is_empty() {
+                command.highlight = true;
+            }
+        })
+    }
 }

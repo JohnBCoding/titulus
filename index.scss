@@ -85,13 +85,13 @@ input:focus {
 .col {
     display: flex;
     flex-direction: column;
-    row-gap: 0.125em;
+    gap: 0.125rem;
 }
 
 .row {
     display: flex;
     flex-direction: row;
-    column-gap: 0.125em;
+    gap: 0.125rem;
 }
 
 .expand-x {
@@ -122,8 +122,8 @@ input:focus {
     overflow-y: scroll;
 }
 
-.hide {
-    opacity: 0;
+.highlight {
+    background-color: var(--accent);
 }
 
 /* || End General styles */
@@ -169,6 +169,10 @@ input:focus {
     padding-left: 0.5em;
     padding-right: 0.5em;
     transition: color 0.25s ease-in-out;
+}
+
+.command-container .col .highlight span {
+    color: var(--text);
 }
 
 .command-container .col button:hover span {
