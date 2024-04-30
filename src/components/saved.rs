@@ -14,6 +14,7 @@ pub fn saved(props: &Props) -> Html {
             event.stop_propagation();
 
             match &command.command_type {
+                CommandType::Empty => {}
                 CommandType::Link(link) => {
                     // Open link in new window
                     let _window = web_sys::window()

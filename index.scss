@@ -70,6 +70,12 @@ input {
     border-radius: 8px;
     outline: none;
     padding: 0.5em;
+    transition: background-color 0.25s ease-in-out;
+}
+
+select:hover,
+input:hover {
+    background-color: #000000;
 }
 
 input:focus {
@@ -125,7 +131,6 @@ input:focus {
 
 .main-container:not(:has(button:hover), :has(.settings-container:hover)):hover {
     background-color: var(--accent);
-    transition: background-color 1s ease-out;
 }
 
 .command-container .col:first-child button:first-child {
@@ -166,9 +171,17 @@ input:focus {
     background-color: var(--primary);
     border: 1px solid var(--primary);
     border-radius: 8px;
-    width: 350px;
-    height: 400px;
-    padding: 0.25em;
+    width: 352px;
+    height: 414px;
+    padding: 0.5em;
+}
+
+#hotkey-input {
+    position: absolute;
+    opacity: 0;
+    height: 0;
+    width: 0;
+    padding: 0;
 }
 
 @media screen and (min-width: 1024px) {
@@ -182,7 +195,33 @@ input:focus {
     }
 
     .settings-container {
-        width: 1000px;
-        height: 300px;
+        width: 1008px;
+        height: 307px;
     }
+
+    #hotkey-input {
+        background-color: var(--background);
+        opacity: 1;
+        font-size: 3rem;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 50%;
+        margin-top: 6em;
+        text-align: center;
+        padding: 1em;
+        cursor: default;
+        caret-color: transparent;
+        transition: background-color 0.25s ease-in-out;
+    }
+
+    #hotkey-input:not(:focus) {
+        background-color: var(--background);
+    }
+
+    .main-container:not(:has(button:hover), :not(:hover)) #hotkey-input {
+        background-color: var(--accent);
+    }
+
 }

@@ -6,6 +6,7 @@ pub fn content() -> Html {
     let mobile_state = use_state(|| false);
     let profile_state = use_state(|| Profile::new());
     let settings_state = use_state(|| true);
+    let hidden_input_ref = use_node_ref();
 
     if *load_state {
         let window = web_sys::window().unwrap();
@@ -16,8 +17,21 @@ pub fn content() -> Html {
             mobile_state.set(false);
         }
 
+        profile_state.set(load());
         load_state.set(false);
     }
+
+    let _ = {
+        let settings_state = settings_state.clone();
+        let hidden_input_ref = hidden_input_ref.clone();
+        use_effect(move || {
+            if !*settings_state {
+                // Auto focus input on load
+                let input = hidden_input_ref.cast::<HtmlInputElement>().unwrap();
+                let _ = input.focus();
+            }
+        })
+    };
 
     let handle_on_click_settings = {
         let settings_state = settings_state.clone();
@@ -28,42 +42,66 @@ pub fn content() -> Html {
         })
     };
 
-    let handle_on_click_container = {
-        Callback::from(move |event: MouseEvent| {
-            event.prevent_default();
-            event.stop_propagation();
+    let handle_on_update_profile = {
+        let profile_state = profile_state.clone();
+        Callback::from(move |new_profile: Profile| {
+            profile_state.set(new_profile);
         })
     };
 
-    let command_options_html = profile_state
-        .commands
-        .iter()
-        .enumerate()
-        .map(|(index, command)| {
-            html! {
-                <option value={format!("{}", index)}>{format!("{} {}", index+1, command.name)}</option>
+    let handle_hotkeys = {
+        let profile_state = profile_state.clone();
+        Callback::from(move |event: KeyboardEvent| {
+            // Find if any command is tied value
+            if event.key() == "Enter" {
+                let value = event.target_unchecked_into::<HtmlInputElement>().value();
+                if let Some(command) = profile_state
+                    .commands
+                    .iter()
+                    .filter(|command| command.hotkey == value)
+                    .next()
+                {
+                    match &command.command_type {
+                        CommandType::Empty => {}
+                        CommandType::Link(link) => {
+                            // Open link in new window
+                            let _window = web_sys::window()
+                                .unwrap()
+                                .window()
+                                .open_with_url_and_target(link, "_blank");
+                        }
+                    }
+                }
             }
         })
-        .collect::<Html>();
+    };
+
+    let handle_focus_hotkeys = {
+        let mobile_state = mobile_state.clone();
+        let hidden_input_ref = hidden_input_ref.clone();
+        Callback::from(move |event: FocusEvent| {
+            event.prevent_default();
+
+            // Auto focus input on desktop only, doesn't work without the delay
+            if !*mobile_state {
+                let hidden_input_ref = hidden_input_ref.clone();
+                Timeout::new(1, move || {
+                    let input = hidden_input_ref.cast::<HtmlInputElement>().unwrap();
+                    let _ = input.focus();
+                })
+                .forget();
+            }
+        })
+    };
 
     html! {
         <main class="col expand-x expand-y fade-in">
             <div class="main-container col expand-x expand-y" onclick={&handle_on_click_settings}>
                 if !*settings_state {
-                    <Commands mobile={mobile_state.deref().clone()} profile={profile_state.deref().clone()}/>
+                    <Commands mobile={mobile_state.deref().clone()} profile={profile_state.deref().clone()} />
+                    <input id="hotkey-input" class="flex-center-x" onkeydown={&handle_hotkeys} onblur={&handle_focus_hotkeys} ref={hidden_input_ref}/>
                 } else {
-                    <div class="settings-container col flex-center-x flex-center-y" onclick={&handle_on_click_container}>
-                        <select>
-                            {command_options_html}
-                        </select>
-                        <div class="row">
-                            <input placeholder="Name" maxlength=24/>
-                            <select class="expand-x">
-                                <option value="link">{"Link"}</option>
-                            </select>
-                        </div>
-                        <input placeholder="Value"/>
-                    </div>
+                    <Settings mobile={mobile_state.deref().clone()} profile={profile_state.deref().clone()} update_profile={&handle_on_update_profile} />
                 }
             </div>
         </main>
