@@ -38,6 +38,7 @@ pub fn hotkey_input(props: &Props) -> Html {
     let handle_hotkeys = {
         let profile = props.profile.clone();
         let active = props.active.clone();
+        let update_profile = props.update_profile.clone();
         Callback::from(move |event: KeyboardEvent| {
             // We don't handle hotkeys if not active
             if !active {
@@ -70,8 +71,10 @@ pub fn hotkey_input(props: &Props) -> Html {
                     let search_link = profile.search_template.replace("{}", &input.value());
                     open_link(&search_link, true);
                 }
-
                 input.set_value("");
+                let mut profile = profile.clone();
+                profile.check_hotkey("");
+                update_profile.emit(profile);
             }
         })
     };
