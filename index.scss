@@ -122,6 +122,10 @@ input:focus {
     overflow-y: scroll;
 }
 
+.hide {
+    opacity: 0;
+}
+
 /* || End General styles */
 
 .main-container {
@@ -131,6 +135,10 @@ input:focus {
 
 .main-container:not(:has(button:hover), :has(.settings-container:hover)):hover {
     background-color: var(--accent);
+}
+
+.command-container {
+    margin-block: auto;
 }
 
 .command-container .col:first-child button:first-child {
@@ -173,6 +181,7 @@ input:focus {
     border-radius: 8px;
     width: 352px;
     height: 414px;
+    margin-block: auto;
     padding: 0.5em;
 }
 
@@ -194,26 +203,33 @@ input:focus {
         height: 75px;
     }
 
+    .command-container {
+        margin-top: 0;
+        margin-bottom: 27em;
+    }
+
     .settings-container {
         width: 1008px;
         height: 307px;
+        margin-top: 0;
+        margin-bottom: 27em;
     }
 
     #hotkey-input {
         background-color: var(--background);
-        opacity: 1;
-        font-size: 3rem;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        width: 50%;
-        margin-top: 3em;
+        position: relative;
+        font-size: 4rem;
         text-align: center;
-        padding: 1em;
         cursor: default;
         caret-color: transparent;
+        width: 75%;
+        padding: 1em;
+        margin-top: auto;
         transition: background-color 0.25s ease-in-out;
+    }
+
+    #hotkey-input:not(.hide) {
+        opacity: 1;
     }
 
     #hotkey-input:not(:focus) {

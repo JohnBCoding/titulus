@@ -20,7 +20,7 @@ pub fn commands(props: &Props) -> Html {
     };
 
     html! {
-        <div class="command-container row flex-center-x flex-center-y">
+        <div class="command-container row flex-center-x">
             if !&props.mobile {
                 <div class="col">
                     {command_html[0].clone()}

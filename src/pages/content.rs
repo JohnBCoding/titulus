@@ -4,9 +4,9 @@ use crate::prelude::*;
 pub fn content() -> Html {
     let load_state = use_state(|| true);
     let mobile_state = use_state(|| false);
+    let settings_state = use_state(|| false);
     let profile_state = use_state(|| Profile::new());
-    let settings_state = use_state(|| true);
-    let hidden_input_ref = use_node_ref();
+    let input_ref = use_node_ref();
 
     if *load_state {
         let window = web_sys::window().unwrap();
@@ -23,11 +23,11 @@ pub fn content() -> Html {
 
     let _ = {
         let settings_state = settings_state.clone();
-        let hidden_input_ref = hidden_input_ref.clone();
+        let input_ref = input_ref.clone();
         use_effect(move || {
             if !*settings_state {
                 // Auto focus input on load
-                let input = hidden_input_ref.cast::<HtmlInputElement>().unwrap();
+                let input = input_ref.cast::<HtmlInputElement>().unwrap();
                 let _ = input.focus();
             }
         })
@@ -51,6 +51,7 @@ pub fn content() -> Html {
 
     let handle_hotkeys = {
         let profile_state = profile_state.clone();
+        let input_ref = input_ref.clone();
         Callback::from(move |event: KeyboardEvent| {
             // Find if any command is tied value
             if event.key() == "Enter" {
@@ -72,21 +73,24 @@ pub fn content() -> Html {
                         }
                     }
                 }
+
+                let input = input_ref.cast::<HtmlInputElement>().unwrap();
+                input.set_value("");
             }
         })
     };
 
     let handle_focus_hotkeys = {
         let mobile_state = mobile_state.clone();
-        let hidden_input_ref = hidden_input_ref.clone();
+        let input_ref = input_ref.clone();
         Callback::from(move |event: FocusEvent| {
             event.prevent_default();
 
             // Auto focus input on desktop only, doesn't work without the delay
             if !*mobile_state {
-                let hidden_input_ref = hidden_input_ref.clone();
+                let input_ref = input_ref.clone();
                 Timeout::new(1, move || {
-                    let input = hidden_input_ref.cast::<HtmlInputElement>().unwrap();
+                    let input = input_ref.cast::<HtmlInputElement>().unwrap();
                     let _ = input.focus();
                 })
                 .forget();
@@ -98,9 +102,10 @@ pub fn content() -> Html {
         <main class="col expand-x expand-y fade-in">
             <div class="main-container col expand-x expand-y" onclick={&handle_on_click_settings}>
                 if !*settings_state {
+                    <input id="hotkey-input" class="flex-center-x" onkeydown={&handle_hotkeys} onblur={&handle_focus_hotkeys} ref={input_ref}/>
                     <Commands mobile={mobile_state.deref().clone()} profile={profile_state.deref().clone()} />
-                    <input id="hotkey-input" class="flex-center-x" onkeydown={&handle_hotkeys} onblur={&handle_focus_hotkeys} ref={hidden_input_ref}/>
                 } else {
+                    <input id="hotkey-input" class="flex-center-x hide" onkeydown={&handle_hotkeys} onblur={&handle_focus_hotkeys} ref={input_ref}/>
                     <Settings mobile={mobile_state.deref().clone()} profile={profile_state.deref().clone()} update_profile={&handle_on_update_profile} />
                 }
             </div>

@@ -109,7 +109,7 @@ pub fn settings(props: &Props) -> Html {
         .collect::<Html>();
 
     html! {
-        <div class="settings-container col flex-center-x flex-center-y" onclick={&handle_on_click_container}>
+        <div class="settings-container col flex-center-x" onclick={&handle_on_click_container}>
             <select onchange={&handle_on_change_command}>
                 {command_options_html}
             </select>
