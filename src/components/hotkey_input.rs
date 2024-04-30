@@ -107,6 +107,6 @@ pub fn hotkey_input(props: &Props) -> Html {
     };
 
     html! {
-        <input id="hotkey-input" class="flex-center-x" onkeydown={&handle_hotkeys} onkeyup={&handle_hotkeys_highlight} onblur={&handle_hotkeys_focus} ref={input_ref}/>
+        <input id="hotkey-input" onkeydown={&handle_hotkeys} onkeyup={&handle_hotkeys_highlight} onblur={&handle_hotkeys_focus} ref={input_ref}/>
     }
 }

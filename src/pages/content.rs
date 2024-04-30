@@ -65,12 +65,14 @@ pub fn content() -> Html {
     html! {
         <main class="col expand-x expand-y fade-in">
             <div id="main" class="main-container col expand-x expand-y" onclick={&handle_on_click_settings} onmouseover={&handle_on_hover_settings}>
-                <HotkeyInput mobile={mobile_state.deref().clone()} profile={profile_state.deref().clone()} override_value={*input_override_state} active={!*settings_state} update_profile={&handle_on_update_profile}/>
-                if !*settings_state {
-                    <Commands mobile={mobile_state.deref().clone()} profile={profile_state.deref().clone()} />
-                } else {
-                    <Settings mobile={mobile_state.deref().clone()} profile={profile_state.deref().clone()} update_profile={&handle_on_update_profile} />
-                }
+                <div class="content-container flex-center-x flex-center-y">
+                    <HotkeyInput mobile={mobile_state.deref().clone()} profile={profile_state.deref().clone()} override_value={*input_override_state} active={!*settings_state} update_profile={&handle_on_update_profile}/>
+                    if !*settings_state {
+                        <Commands mobile={mobile_state.deref().clone()} profile={profile_state.deref().clone()} />
+                    } else {
+                        <Settings mobile={mobile_state.deref().clone()} profile={profile_state.deref().clone()} update_profile={&handle_on_update_profile} />
+                    }
+                </div>
             </div>
         </main>
     }

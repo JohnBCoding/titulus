@@ -208,9 +208,8 @@ input:focus {
         height: 75px;
     }
 
-    .command-container {
-        margin-top: 0;
-        margin-bottom: 27em;
+    .content-container {
+        transform: translateY(-2.5em);
     }
 
     .settings-container {
@@ -218,8 +217,6 @@ input:focus {
         min-height: 306px;
         max-width: 1006px;
         max-height: 306px;
-        margin-top: 0;
-        margin-bottom: 27em;
     }
 
     #hotkey-input {
@@ -229,10 +226,9 @@ input:focus {
         font-size: 4rem;
         text-align: center;
         cursor: default;
+        width: 100%;
         caret-color: transparent;
-        width: 75%;
         padding: 1em;
-        margin-top: auto;
         transition: background-color 0.25s ease-in-out;
     }
 
