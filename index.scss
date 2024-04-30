@@ -50,7 +50,7 @@ button {
     background-color: var(--primary);
     border: 1px solid var(--primary);
     width: 175px;
-    height: 50px;
+    height: 75px;
     padding: 0;
     transition: background-color 0.25s ease-in-out;
 }
@@ -185,7 +185,7 @@ input:focus {
     border: 1px solid var(--primary);
     border-radius: 8px;
     width: 352px;
-    height: 414px;
+    height: 614px;
     margin-block: auto;
     padding: 0.5em;
 }
@@ -214,10 +214,10 @@ input:focus {
     }
 
     .settings-container {
-        min-width: 1008px;
-        min-height: 307px;
-        max-width: 1008px;
-        max-height: 307px;
+        min-width: 1006px;
+        min-height: 306px;
+        max-width: 1006px;
+        max-height: 306px;
         margin-top: 0;
         margin-bottom: 27em;
     }
