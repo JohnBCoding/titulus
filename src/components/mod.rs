@@ -1,3 +1,6 @@
+mod hotkey_input;
+pub use hotkey_input::*;
+
 mod commands;
 pub use commands::*;
 
