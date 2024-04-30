@@ -35,10 +35,36 @@ pub fn content() -> Html {
 
     let handle_on_click_settings = {
         let settings_state = settings_state.clone();
+        let input_ref = input_ref.clone();
         Callback::from(move |event: MouseEvent| {
             event.prevent_default();
+            let input = input_ref.cast::<HtmlInputElement>().unwrap();
+            if !*settings_state {
+                input.set_value("Close Settings");
+            } else {
+                input.set_value("Open Settings");
+            }
 
             settings_state.set(!*settings_state);
+        })
+    };
+
+    let handle_on_hover_settings = {
+        let settings_state = settings_state.clone();
+        let input_ref = input_ref.clone();
+        Callback::from(move |event: MouseEvent| {
+            let target = event.target_unchecked_into::<HtmlDivElement>();
+            let input = input_ref.cast::<HtmlInputElement>().unwrap();
+            log!(target.id());
+            if target.id() != "" {
+                if !*settings_state {
+                    input.set_value("Open Settings");
+                } else {
+                    input.set_value("Close Settings");
+                }
+            } else {
+                input.set_value("");
+            }
         })
     };
 
@@ -50,9 +76,21 @@ pub fn content() -> Html {
     };
 
     let handle_hotkeys = {
+        let settings_state = settings_state.clone();
         let profile_state = profile_state.clone();
         let input_ref = input_ref.clone();
         Callback::from(move |event: KeyboardEvent| {
+            // We don't handle hotkeys on settings menu
+            if *settings_state {
+                event.prevent_default();
+                return;
+            }
+
+            let input = input_ref.cast::<HtmlInputElement>().unwrap();
+            if input.value() == "Open Settings" {
+                input.set_value("")
+            }
+
             // Find if any command is tied value
             if event.key() == "Enter" {
                 let value = event.target_unchecked_into::<HtmlInputElement>().value();
@@ -74,7 +112,6 @@ pub fn content() -> Html {
                     }
                 }
 
-                let input = input_ref.cast::<HtmlInputElement>().unwrap();
                 input.set_value("");
             }
         })
@@ -82,12 +119,13 @@ pub fn content() -> Html {
 
     let handle_focus_hotkeys = {
         let mobile_state = mobile_state.clone();
+        let settings_state = settings_state.clone();
         let input_ref = input_ref.clone();
         Callback::from(move |event: FocusEvent| {
             event.prevent_default();
 
             // Auto focus input on desktop only, doesn't work without the delay
-            if !*mobile_state {
+            if !*mobile_state && !*settings_state {
                 let input_ref = input_ref.clone();
                 Timeout::new(1, move || {
                     let input = input_ref.cast::<HtmlInputElement>().unwrap();
@@ -100,12 +138,11 @@ pub fn content() -> Html {
 
     html! {
         <main class="col expand-x expand-y fade-in">
-            <div class="main-container col expand-x expand-y" onclick={&handle_on_click_settings}>
+            <div id="main" class="main-container col expand-x expand-y" onclick={&handle_on_click_settings} onmouseover={&handle_on_hover_settings}>
+                <input id="hotkey-input" class="flex-center-x" onkeydown={&handle_hotkeys} onblur={&handle_focus_hotkeys} ref={input_ref}/>
                 if !*settings_state {
-                    <input id="hotkey-input" class="flex-center-x" onkeydown={&handle_hotkeys} onblur={&handle_focus_hotkeys} ref={input_ref}/>
                     <Commands mobile={mobile_state.deref().clone()} profile={profile_state.deref().clone()} />
                 } else {
-                    <input id="hotkey-input" class="flex-center-x hide" onkeydown={&handle_hotkeys} onblur={&handle_focus_hotkeys} ref={input_ref}/>
                     <Settings mobile={mobile_state.deref().clone()} profile={profile_state.deref().clone()} update_profile={&handle_on_update_profile} />
                 }
             </div>

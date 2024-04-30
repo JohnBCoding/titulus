@@ -218,6 +218,7 @@ input:focus {
     #hotkey-input {
         background-color: var(--background);
         position: relative;
+        opacity: 1;
         font-size: 4rem;
         text-align: center;
         cursor: default;
@@ -228,15 +229,15 @@ input:focus {
         transition: background-color 0.25s ease-in-out;
     }
 
-    #hotkey-input:not(.hide) {
-        opacity: 1;
-    }
-
     #hotkey-input:not(:focus) {
         background-color: var(--background);
     }
 
-    .main-container:not(:has(button:hover), :not(:hover)) #hotkey-input {
+    .main-container:not(:has(button:hover), :not(:hover), :has(.settings-container:hover)) #hotkey-input {
+        background-color: var(--accent);
+    }
+
+    .settings-container:hover #hotkey-input {
         background-color: var(--accent);
     }
 

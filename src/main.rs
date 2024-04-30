@@ -14,7 +14,7 @@ mod prelude {
     pub use std::collections::HashMap;
     pub use std::ops::Deref;
     pub use wasm_bindgen::JsValue;
-    pub use web_sys::{HtmlButtonElement, HtmlInputElement, HtmlSelectElement};
+    pub use web_sys::{HtmlButtonElement, HtmlDivElement, HtmlInputElement, HtmlSelectElement};
     pub use yew::prelude::*;
     pub use yew_router::prelude::*;
 }
