@@ -49,7 +49,7 @@ pub fn content() -> Html {
                 } else {
                     input_override_state.set("Close Settings");
                 }
-            } else {
+            } else if !input_override_state.is_empty() {
                 input_override_state.set("");
             }
         })
