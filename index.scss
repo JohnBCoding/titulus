@@ -51,6 +51,7 @@ button {
     border: 1px solid var(--primary);
     width: 175px;
     height: 75px;
+    cursor: pointer;
     padding: 0;
     transition: background-color 0.25s ease-in-out;
 }
@@ -130,6 +131,7 @@ input:focus {
 /* || End General styles */
 
 .main-container {
+    cursor: pointer;
     padding: 0.25em;
     transition: background-color 0.25s ease-in-out;
 }
@@ -195,6 +197,7 @@ input:focus {
     opacity: 0;
     height: 0;
     width: 0;
+    cursor: pointer;
     padding: 0;
 }
 
@@ -225,7 +228,6 @@ input:focus {
         opacity: 1;
         font-size: 4rem;
         text-align: center;
-        cursor: default;
         width: 100%;
         caret-color: transparent;
         padding: 1em;
