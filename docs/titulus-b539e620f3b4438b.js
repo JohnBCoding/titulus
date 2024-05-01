@@ -221,7 +221,7 @@ function makeMutClosure(arg0, arg1, dtor, f) {
     return real;
 }
 function __wbg_adapter_38(arg0, arg1) {
-    wasm.wasm_bindgen__convert__closures__invoke0_mut__hadfd5fd36f9d0591(arg0, arg1);
+    wasm.wasm_bindgen__convert__closures__invoke0_mut__h107b078f76bef605(arg0, arg1);
 }
 
 function makeClosure(arg0, arg1, dtor, f) {
@@ -947,7 +947,7 @@ async function __wbg_init(input) {
     if (wasm !== undefined) return wasm;
 
     if (typeof input === 'undefined') {
-        input = new URL('titulus-f3e1a38f4a5a2ad2_bg.wasm', import.meta.url);
+        input = new URL('titulus-b539e620f3b4438b_bg.wasm', import.meta.url);
     }
     const imports = __wbg_get_imports();
 
