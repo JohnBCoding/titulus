@@ -4,7 +4,7 @@
 /* https://lospec.com/palette-list/titanstone */
 :root {
     --background: #000000;
-    --primary: #635c6d;
+    --primary: #4d4755;
     --accent: #150413;
     --text: #ffffd1;
 }
@@ -176,10 +176,11 @@ input:focus {
 
 .command-container .col .highlight span {
     color: var(--text);
+    transition: none;
 }
 
 .command-container .col button:hover span {
-    color: var(--primary);
+    color: var(--text);
 }
 
 .settings-container {
