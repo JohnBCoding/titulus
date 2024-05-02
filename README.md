@@ -1,0 +1,26 @@
+# Titulus
+
+>from Latin, literally: inscription, label, **title**.
+
+Titulus is a minimal browser homepage, heavily inspired by [tilde](https://github.com/xvvvyz/tilde/tree/main).
+
+## Configure
+
+To configure the homepage, click the settings button or hit ESC to bring up the settings view.
+
+On the settings menu you can set the name, url and hotkey for each slot on the homepage.
+
+You can also change the default search option in the settings. Be sure to put `{}` wherever the search value should be inserted.
+
+## Usage
+
+**To go to a site**, type the corresponding hotkey and press <kbd>Enter</kbd>.
+
+e.g. if you have GitHub assigned to `g` then `g` + <kbd>Enter</kbd> will redirect you to
+GitHub
+
+**If your input doesn't match a key**, a DuckDuckGo search will be triggered.
+
+e.g. `google` <kbd>Enter</kbd> will search the configured search url for google **(Default is DuckDuckGo)**
+
+Auto complete results will also be displayed and can be cycled through with <kbd>Up</kbd> / <kbd>Down</kbd>
