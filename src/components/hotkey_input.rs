@@ -41,7 +41,7 @@ pub fn hotkey_input(props: &Props) -> Html {
         let update_profile = props.update_profile.clone();
         Callback::from(move |event: KeyboardEvent| {
             // We don't handle hotkeys if not active
-            if !active {
+            if !active && event.key() != "Escape" {
                 event.prevent_default();
                 return;
             }
@@ -51,30 +51,33 @@ pub fn hotkey_input(props: &Props) -> Html {
                 input.set_value("");
             }
 
-            // Find if any command is tied value
-            if event.key() == "Enter" {
-                let value = event.target_unchecked_into::<HtmlInputElement>().value();
-                if let Some(command) = profile
-                    .commands
-                    .iter()
-                    .filter(|command| command.hotkey == value)
-                    .next()
-                {
-                    match &command.command_type {
-                        CommandType::Empty => {}
-                        CommandType::Link(link) => {
-                            open_link(link, true);
+            match event.key().as_str() {
+                // Find if any command is tied value and execute it
+                "Enter" => {
+                    let value = event.target_unchecked_into::<HtmlInputElement>().value();
+                    if let Some(command) = profile
+                        .commands
+                        .iter()
+                        .filter(|command| command.hotkey == value)
+                        .next()
+                    {
+                        match &command.command_type {
+                            CommandType::Empty => {}
+                            CommandType::Link(link) => {
+                                open_link(link, true);
+                            }
                         }
+                    } else {
+                        // No command, so search instead
+                        let search_link = profile.search_template.replace("{}", &input.value());
+                        open_link(&search_link, true);
                     }
-                } else {
-                    // No command, so search instead
-                    let search_link = profile.search_template.replace("{}", &input.value());
-                    open_link(&search_link, true);
+                    input.set_value("");
+                    let mut profile = profile.clone();
+                    profile.check_hotkey("");
+                    update_profile.emit(profile);
                 }
-                input.set_value("");
-                let mut profile = profile.clone();
-                profile.check_hotkey("");
-                update_profile.emit(profile);
+                _ => {}
             }
         })
     };

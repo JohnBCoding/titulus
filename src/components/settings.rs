@@ -10,7 +10,16 @@ pub struct Props {
 #[function_component(Settings)]
 pub fn settings(props: &Props) -> Html {
     let command_index_state = use_state(|| 0);
+    let select_ref = use_node_ref();
     let command_type_ref = use_node_ref();
+
+    let _ = {
+        let select_ref = select_ref.clone();
+        use_effect(move || {
+            let select = select_ref.cast::<HtmlDivElement>().unwrap();
+            let _ = select.focus();
+        })
+    };
 
     let handle_on_click_container = {
         Callback::from(move |event: MouseEvent| {
@@ -128,8 +137,8 @@ pub fn settings(props: &Props) -> Html {
         .collect::<Html>();
 
     html! {
-        <div class="settings-container col flex-center-x" onclick={&handle_on_click_container}>
-            <select onchange={&handle_on_change_command}>
+        <div class="settings-container col flex-center-x" onclick={&handle_on_click_container} >
+            <select onchange={&handle_on_change_command} ref={select_ref}>
                 {command_options_html}
             </select>
             <div class="row">

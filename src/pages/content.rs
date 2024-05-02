@@ -21,6 +21,16 @@ pub fn content() -> Html {
         load_state.set(false);
     }
 
+    // Handle toggling settings
+    use_event_with_window("keydown", {
+        let settings_state = settings_state.clone();
+        move |event: KeyboardEvent| {
+            if event.key() == "Escape" {
+                settings_state.set(!*settings_state);
+            }
+        }
+    });
+
     let handle_on_click_settings = {
         let settings_state = settings_state.clone();
         let input_override_state = input_override_state.clone();
@@ -42,7 +52,7 @@ pub fn content() -> Html {
         let input_override_state = input_override_state.clone();
         Callback::from(move |event: MouseEvent| {
             let target = event.target_unchecked_into::<HtmlDivElement>();
-            log!("{} target_id: ", target.id());
+
             if target.id() != "" {
                 if !*settings_state {
                     input_override_state.set("Open Settings");
@@ -66,7 +76,7 @@ pub fn content() -> Html {
         <main class="col expand-x expand-y fade-in">
             <div id="main" class="main-container col expand-x expand-y" onclick={&handle_on_click_settings} onmouseover={&handle_on_hover_settings}>
                 <div class="content-container flex-center-x flex-center-y">
-                    <HotkeyInput mobile={mobile_state.deref().clone()} profile={profile_state.deref().clone()} override_value={*input_override_state} active={!*settings_state} update_profile={&handle_on_update_profile}/>
+                    <HotkeyInput mobile={mobile_state.deref().clone()} profile={profile_state.deref().clone()} override_value={*input_override_state} active={!*settings_state} update_profile={&handle_on_update_profile} />
                     if !*settings_state {
                         <Commands mobile={mobile_state.deref().clone()} profile={profile_state.deref().clone()} />
                     } else {

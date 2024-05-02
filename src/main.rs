@@ -14,6 +14,7 @@ mod prelude {
     pub use std::ops::Deref;
     pub use web_sys::{HtmlDivElement, HtmlInputElement, HtmlSelectElement};
     pub use yew::prelude::*;
+    pub use yew_hooks::use_event_with_window;
     pub use yew_router::prelude::*;
 }
 
