@@ -19,7 +19,7 @@ You can also change the default search option in the settings. Be sure to put `{
 e.g. if you have GitHub assigned to `g` then `g` + <kbd>Enter</kbd> will redirect you to
 GitHub
 
-**If your input doesn't match a key**, a DuckDuckGo search will be triggered.
+**If your input doesn't match a key**, a search will be triggered.
 
 e.g. `google` <kbd>Enter</kbd> will search the configured search url for google **(Default is DuckDuckGo)**
 
