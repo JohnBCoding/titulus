@@ -4,7 +4,6 @@ use crate::prelude::*;
 pub struct Props {
     pub mobile: bool,
     pub profile: Profile,
-    pub override_value: String,
     pub active: bool,
     pub update_profile: Callback<Profile>,
 }
@@ -15,20 +14,10 @@ pub fn hotkey_input(props: &Props) -> Html {
 
     let _ = {
         let input_ref = input_ref.clone();
-        let value = props.override_value.clone();
         let active = props.active.clone();
         use_effect(move || {
             // Auto focus input on load
             let input = input_ref.cast::<HtmlInputElement>().unwrap();
-            if input.value().is_empty()
-                || input.value() == "Open Settings"
-                || input.value() == "Close Settings"
-            {
-                input.set_value(&value);
-            } else if !active {
-                input.set_value("");
-            }
-
             if active {
                 let _ = input.focus();
             }

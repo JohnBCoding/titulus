@@ -6,7 +6,7 @@ pub fn content() -> Html {
     let mobile_state = use_state(|| false);
     let settings_state = use_state(|| false);
     let profile_state = use_state(|| Profile::new());
-    let input_override_state = use_state(|| "");
+    let popup_state = use_state(|| html! {<p class="popup flex-center-x">{""}</p>});
 
     if *load_state {
         let window = web_sys::window().unwrap();
@@ -21,7 +21,7 @@ pub fn content() -> Html {
         load_state.set(false);
     }
 
-    // Handle toggling settings
+    // Handle global hotkeys (those that are used on main screen and settings screen)
     use_event_with_window("keydown", {
         let settings_state = settings_state.clone();
         move |event: KeyboardEvent| {
@@ -33,13 +33,13 @@ pub fn content() -> Html {
 
     let handle_on_click_settings = {
         let settings_state = settings_state.clone();
-        let input_override_state = input_override_state.clone();
+        let popup_state = popup_state.clone();
         Callback::from(move |event: MouseEvent| {
             event.prevent_default();
             if !*settings_state {
-                input_override_state.set("Close Settings");
+                popup_state.set(html! {<p class="popup flex-center-x">{"Close Settings"}</p>});
             } else {
-                input_override_state.set("Open Settings");
+                popup_state.set(html! {<p class="popup flex-center-x">{"Open Settings"}</p>});
             }
 
             settings_state.set(!*settings_state);
@@ -49,18 +49,20 @@ pub fn content() -> Html {
     // Checks if main is hovered then displays the open/close settings text
     let handle_on_hover_settings = {
         let settings_state = settings_state.clone();
-        let input_override_state = input_override_state.clone();
+        let popup_state = popup_state.clone();
         Callback::from(move |event: MouseEvent| {
             let target = event.target_unchecked_into::<HtmlDivElement>();
-
-            if target.id() != "" {
+            if let Some(_target_name) = target.get_attribute("name") {
+                // let inner_text = format!("{}", target.inner_text());
+                popup_state.set(html! {<p class="popup flex-center-x">{"test"}</p>});
+            } else if target.id() != "" {
                 if !*settings_state {
-                    input_override_state.set("Open Settings");
+                    popup_state.set(html! {<p class="popup flex-center-x">{"Open Settings"}</p>});
                 } else {
-                    input_override_state.set("Close Settings");
+                    popup_state.set(html! {<p class="popup flex-center-x">{"Close Settings"}</p>});
                 }
-            } else if !input_override_state.is_empty() {
-                input_override_state.set("");
+            } else {
+                popup_state.set(html! {<p class="popup flex-center-x">{""}</p>});
             }
         })
     };
@@ -76,7 +78,10 @@ pub fn content() -> Html {
         <main class="col expand-x expand-y fade-in">
             <div id="main" class="main-container col expand-x expand-y" onclick={&handle_on_click_settings} onmouseover={&handle_on_hover_settings}>
                 <div class="content-container flex-center-x flex-center-y">
-                    <HotkeyInput mobile={mobile_state.deref().clone()} profile={profile_state.deref().clone()} override_value={*input_override_state} active={!*settings_state} update_profile={&handle_on_update_profile} />
+                    <HotkeyInput mobile={mobile_state.deref().clone()} profile={profile_state.deref().clone()} active={!*settings_state} update_profile={&handle_on_update_profile} />
+                    <div class="row">
+                        {popup_state.deref().clone()}
+                    </div>
                     if !*settings_state {
                         <Commands mobile={mobile_state.deref().clone()} profile={profile_state.deref().clone()} />
                     } else {
