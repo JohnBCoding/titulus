@@ -4,6 +4,7 @@ use crate::prelude::*;
 pub struct Profile {
     pub commands: Vec<Command>,
     pub search_template: String,
+    pub proxy_for_auto: String,
 }
 
 impl Profile {
@@ -15,16 +16,21 @@ impl Profile {
         Self {
             commands,
             search_template: "https://duckduckgo.com/?q={}".to_string(),
+            proxy_for_auto: "https://corsproxy.io/?".to_string(),
         }
     }
 
     /// Checks if hotkey matches any command, highlights it if so
-    pub fn check_hotkey(&mut self, hotkey: &str) {
+    pub fn check_hotkey(&mut self, hotkey: &str) -> bool {
+        let mut found = false;
         self.commands.iter_mut().for_each(|command| {
             command.highlight = false;
             if command.hotkey == hotkey && !hotkey.is_empty() {
                 command.highlight = true;
+                found = true;
             }
-        })
+        });
+
+        found
     }
 }
