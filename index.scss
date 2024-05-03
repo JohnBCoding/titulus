@@ -216,6 +216,21 @@ input:focus {
     padding: 0.5em;
 }
 
+.settings-button {
+    background-color: var(--background);
+    border-radius: 8px;
+    text-decoration: none;
+    text-align: center;
+    width: 100%;
+    height: fit-content;
+    padding: 0.25em;
+}
+
+.settings-button:hover {
+    background-color: var(--accent);
+    transition: background-color 0.25s ease-in-out;
+}
+
 #hotkey-input {
     position: absolute;
     opacity: 0;

@@ -23,8 +23,8 @@ pub fn settings(props: &Props) -> Html {
 
     let handle_on_click_container = {
         Callback::from(move |event: MouseEvent| {
-            event.prevent_default();
-            event.stop_propagation();
+            // event.prevent_default();
+            // event.stop_propagation();
         })
     };
 
@@ -136,6 +136,8 @@ pub fn settings(props: &Props) -> Html {
         })
         .collect::<Html>();
 
+    let export_str = format!("{}", serde_json::to_string(&props.profile).unwrap());
+
     html! {
         <div class="settings-container col flex-center-x" onclick={&handle_on_click_container} >
             <select onchange={&handle_on_change_command} ref={select_ref}>
@@ -165,6 +167,12 @@ pub fn settings(props: &Props) -> Html {
                 <input value={format!("{}", &props.profile.commands[*command_index_state].hotkey)} placeholder="Hotkey" onkeypress={&handle_hotkey_key_press} />
             </div>
             <input value={format!("{}", &props.profile.search_template)} class="flex-end-y" placeholder="Search Template" onchange={&handle_on_change_search} />
+            <div class="row">
+                <button class="settings-button">{"Import Profile"}</button>
+                <a class="settings-button" download={"profile.json"} href={format!("data:text/json;charset=utf-8,{}", export_str)}>
+                        {"Export"}
+                </a>
+            </div>
         </div>
     }
 }
