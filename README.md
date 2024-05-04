@@ -24,3 +24,9 @@ GitHub
 e.g. `google` <kbd>Enter</kbd> will search the configured search url for google **(Default is DuckDuckGo)**
 
 Auto complete results will also be displayed and can be cycled through with <kbd>Up</kbd> / <kbd>Down</kbd>
+
+## Access
+
+I have a version hosted via GitHub pages at https://www.titulus.me/
+
+I also have a [Docker Image](https://hub.docker.com/repository/docker/johnbcoding/titulus/general) available or you can build and run it yourself locally.
