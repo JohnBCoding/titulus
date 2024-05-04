@@ -8,6 +8,8 @@ mod prelude {
     pub use crate::models::*;
     pub use crate::pages::*;
     pub use crate::utils::*;
+    pub use gloo::file::callbacks::read_as_text;
+    pub use gloo::file::{File, FileReadError};
     pub use gloo_console::log;
     pub use gloo_timers::callback::Timeout;
     pub use reqwasm::http::Request;

@@ -10,8 +10,10 @@ pub struct Props {
 #[function_component(Settings)]
 pub fn settings(props: &Props) -> Html {
     let command_index_state = use_state(|| 0);
+    let reader_state = use_state(|| None);
     let select_ref = use_node_ref();
     let command_type_ref = use_node_ref();
+    let import_ref = use_node_ref();
 
     let _ = {
         let select_ref = select_ref.clone();
@@ -22,7 +24,7 @@ pub fn settings(props: &Props) -> Html {
     };
 
     let handle_on_click_container = {
-        Callback::from(move |event: MouseEvent| {
+        Callback::from(move |_event: MouseEvent| {
             // event.prevent_default();
             // event.stop_propagation();
         })
@@ -125,6 +127,43 @@ pub fn settings(props: &Props) -> Html {
         })
     };
 
+    let handle_import_on_click = {
+        let import_ref = import_ref.clone();
+        Callback::from(move |event: MouseEvent| {
+            event.prevent_default();
+
+            let import = import_ref.cast::<HtmlInputElement>().unwrap();
+            import.click();
+        })
+    };
+
+    let handle_import_finish = {
+        let reader_state = reader_state.clone();
+        let update_profile = props.update_profile.clone();
+        move |result: Result<String, FileReadError>| {
+            if let Ok(result_str) = result {
+                if let Ok(profile) = serde_json::from_str::<Profile>(&result_str) {
+                    save(&profile);
+                    update_profile.emit(profile);
+                }
+            }
+
+            reader_state.set(None);
+        }
+    };
+
+    let handle_import = {
+        let reader_state = reader_state.clone();
+        Callback::from(move |event: Event| {
+            let input = event.target_unchecked_into::<HtmlInputElement>();
+            let files = input.files().unwrap();
+
+            let gloo_file = File::from(files.get(0).unwrap());
+            let reader = { read_as_text(&gloo_file, handle_import_finish.clone()) };
+            reader_state.set(Some(reader));
+        })
+    };
+
     let command_options_html = props.profile
         .commands
         .iter()
@@ -168,9 +207,10 @@ pub fn settings(props: &Props) -> Html {
             </div>
             <input value={format!("{}", &props.profile.search_template)} class="flex-end-y" placeholder="Search Template" onchange={&handle_on_change_search} />
             <div class="row">
-                <button class="settings-button">{"Import Profile"}</button>
+                <button class="settings-button" onclick={&handle_import_on_click}>{"Import Profile"}</button>
+                <input class="settings-button" type="file" onchange={&handle_import} ref={import_ref}/>
                 <a class="settings-button" download={"profile.json"} href={format!("data:text/json;charset=utf-8,{}", export_str)}>
-                        {"Export"}
+                        {"Export Profile"}
                 </a>
             </div>
         </div>

@@ -83,6 +83,10 @@ input:focus {
     background-color: var(--accent);
 }
 
+input[type=file] {
+    display: none;
+}
+
 .col {
     display: flex;
     flex-direction: column;
@@ -229,6 +233,10 @@ input:focus {
 .settings-button:hover {
     background-color: var(--accent);
     transition: background-color 0.25s ease-in-out;
+}
+
+.settings-button::file-selector-button {
+    display: none;
 }
 
 #hotkey-input {
