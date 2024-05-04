@@ -145,6 +145,8 @@ pub fn settings(props: &Props) -> Html {
                 if let Ok(profile) = serde_json::from_str::<Profile>(&result_str) {
                     save(&profile);
                     update_profile.emit(profile);
+                } else {
+                    log!("file read");
                 }
             }
 
@@ -176,6 +178,7 @@ pub fn settings(props: &Props) -> Html {
         .collect::<Html>();
 
     let export_str = format!("{}", serde_json::to_string(&props.profile).unwrap());
+    let export_str_url_encoded = encode(&export_str);
 
     html! {
         <div class="settings-container col flex-center-x" onclick={&handle_on_click_container} >
@@ -209,7 +212,7 @@ pub fn settings(props: &Props) -> Html {
             <div class="row">
                 <button class="settings-button" onclick={&handle_import_on_click}>{"Import Profile"}</button>
                 <input class="settings-button" type="file" onchange={&handle_import} ref={import_ref}/>
-                <a class="settings-button" download={"profile.json"} href={format!("data:text/json;charset=utf-8,{}", export_str)}>
+                <a class="settings-button" download={"profile.json"} href={format!("data:text/json;charset=utf-8,{}", export_str_url_encoded)}>
                         {"Export Profile"}
                 </a>
             </div>

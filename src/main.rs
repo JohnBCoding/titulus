@@ -17,6 +17,7 @@ mod prelude {
     pub use std::cmp::min;
     pub use std::collections::HashMap;
     pub use std::ops::Deref;
+    pub use urlencoding::encode;
     pub use web_sys::{HtmlDivElement, HtmlInputElement, HtmlSelectElement};
     pub use yew::prelude::*;
     pub use yew_hooks::use_event_with_window;

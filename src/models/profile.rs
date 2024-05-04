@@ -3,10 +3,19 @@ use crate::prelude::*;
 #[derive(Debug, Deserialize, Clone, PartialEq, Serialize)]
 pub struct Profile {
     pub commands: Vec<Command>,
+    #[serde(default = "default_search")]
     pub search_template: String,
+    #[serde(default = "default_proxy")]
     pub proxy_for_auto: String,
 }
 
+fn default_search() -> String {
+    "https://duckduckgo.com/?q={}".to_string()
+}
+
+fn default_proxy() -> String {
+    "https://corsproxy.io/?".to_string()
+}
 impl Profile {
     pub fn new() -> Self {
         let base_cmd = Command::new("Empty", CommandType::Empty, "");

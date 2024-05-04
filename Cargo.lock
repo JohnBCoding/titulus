@@ -1042,6 +1042,7 @@ dependencies = [
  "reqwasm",
  "serde",
  "serde_json",
+ "urlencoding",
  "wasm-bindgen-futures",
  "web-sys",
  "yew",
