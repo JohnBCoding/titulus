@@ -146,7 +146,7 @@ pub fn settings(props: &Props) -> Html {
                     save(&profile);
                     update_profile.emit(profile);
                 } else {
-                    log!("file read");
+                    log!("Error importing profile.");
                 }
             }
 

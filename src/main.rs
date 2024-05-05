@@ -12,6 +12,7 @@ mod prelude {
     pub use gloo::file::{File, FileReadError};
     pub use gloo_console::log;
     pub use gloo_timers::callback::Timeout;
+    pub use regex::Regex;
     pub use reqwasm::http::Request;
     pub use serde::{Deserialize, Serialize};
     pub use std::cmp::min;

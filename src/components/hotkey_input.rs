@@ -52,7 +52,11 @@ pub fn hotkey_input(props: &Props) -> Html {
                 // Find if any command is tied value and execute it
                 "Enter" => {
                     let value = event.target_unchecked_into::<HtmlInputElement>().value();
-                    if let Some(command) = profile
+
+                    // Open url if it matches url format
+                    if is_url(&value) {
+                        open_link(&value, true);
+                    } else if let Some(command) = profile
                         .commands
                         .iter()
                         .filter(|command| command.hotkey == value)
@@ -78,11 +82,13 @@ pub fn hotkey_input(props: &Props) -> Html {
                             open_link(&search_link, true);
                         }
                     }
+
+                    // Reset and update profile
                     input.set_value("");
                     let mut profile = profile.clone();
                     profile.check_hotkey("");
-                    update_profile.emit(profile);
                     update_suggestions.emit(vec![]);
+                    update_profile.emit(profile);
                 }
                 _ => {}
             }
