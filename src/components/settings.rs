@@ -86,14 +86,40 @@ pub fn settings(props: &Props) -> Html {
 
             let value = event.target_unchecked_into::<HtmlInputElement>().value();
             let mut profile = profile.clone();
+            let old_search = match &profile.commands[*command_index_state].command_type {
+                CommandType::Link((_, search)) => search,
+                _ => "",
+            };
             let command_type_value = command_type_ref
                 .cast::<HtmlSelectElement>()
                 .unwrap()
                 .value();
             let command_type = match command_type_value.as_str() {
-                "link" => CommandType::Link(value),
+                "link" => CommandType::Link((value, old_search.to_string())),
                 _ => CommandType::Empty,
             };
+            profile.commands[*command_index_state].command_type = command_type;
+
+            save(&profile);
+            update_profile.emit(profile);
+        })
+    };
+
+    let handle_on_change_link_search = {
+        let profile = props.profile.clone();
+        let command_index_state = command_index_state.clone();
+        let update_profile = props.update_profile.clone();
+        Callback::from(move |event: Event| {
+            event.prevent_default();
+
+            let value = event.target_unchecked_into::<HtmlInputElement>().value();
+            let mut profile = profile.clone();
+            let old_url = match &profile.commands[*command_index_state].command_type {
+                CommandType::Link((url, _)) => url,
+                _ => "",
+            };
+
+            let command_type = CommandType::Link((old_url.to_string(), value));
             profile.commands[*command_index_state].command_type = command_type;
 
             save(&profile);
@@ -190,23 +216,29 @@ pub fn settings(props: &Props) -> Html {
                 <select class="expand-x" ref={command_type_ref}>
                     <option value="link">{"Link"}</option>
                 </select>
+                <input value={format!("{}", &props.profile.commands[*command_index_state].hotkey)} placeholder="Hotkey" onkeypress={&handle_hotkey_key_press} />
             </div>
             <div class="row">
-                <input
-                    value={
-                        match &props.profile.commands[*command_index_state].command_type {
-                            CommandType::Empty => {
-                                "".to_string()
+                {
+                    match &props.profile.commands[*command_index_state].command_type {
+                        CommandType::Empty => {
+                            html! {
+                                <>
+                                    <input value={""} class="expand-x" placeholder="URL" onchange={&handle_on_change_value} />
+                                    <input value="" class="expand-x" placeholder="Search Template" onchange={&handle_on_change_link_search} />
+                                </>
                             }
-                            CommandType::Link(link) => {
-                                link.clone()
+                        }
+                        CommandType::Link((url, search)) => {
+                            html! {
+                                <>
+                                    <input value={url.clone()} class="expand-x" placeholder="Value" onchange={&handle_on_change_value} />
+                                    <input value={search.clone()} class="expand-x" placeholder="Search Template" onchange={&handle_on_change_link_search} />
+                                </>
                             }
                         }
                     }
-                    class="expand-x" placeholder="Value"
-                    onchange={&handle_on_change_value}
-                />
-                <input value={format!("{}", &props.profile.commands[*command_index_state].hotkey)} placeholder="Hotkey" onkeypress={&handle_hotkey_key_press} />
+                }
             </div>
             <input value={format!("{}", &props.profile.search_template)} class="flex-end-y" placeholder="Search Template" onchange={&handle_on_change_search} />
             <div class="row">

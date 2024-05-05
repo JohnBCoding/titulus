@@ -53,19 +53,34 @@ pub fn hotkey_input(props: &Props) -> Html {
                 "Enter" => {
                     let value = event.target_unchecked_into::<HtmlInputElement>().value();
 
+                    let (hotkey, extra) = if value.len() > 1 {
+                        if let Some((hotkey, extra)) = value.split_once(" ") {
+                            (hotkey, extra)
+                        } else {
+                            (value.as_str(), "")
+                        }
+                    } else {
+                        (value.as_str(), "")
+                    };
+
                     // Open url if it matches url format
                     if is_url(&value) {
                         open_link(&value, true);
                     } else if let Some(command) = profile
                         .commands
                         .iter()
-                        .filter(|command| command.hotkey == value)
+                        .filter(|command| command.hotkey == hotkey)
                         .next()
                     {
                         match &command.command_type {
                             CommandType::Empty => {}
-                            CommandType::Link(link) => {
-                                open_link(link, true);
+                            CommandType::Link((link, search_template)) => {
+                                if extra.is_empty() {
+                                    open_link(link, true);
+                                } else {
+                                    let search_url = search_template.replace("{}", extra);
+                                    open_link(&search_url, true);
+                                }
                             }
                         }
                     } else {
@@ -101,10 +116,20 @@ pub fn hotkey_input(props: &Props) -> Html {
         let update_suggestions = props.update_suggestions.clone();
         Callback::from(move |event: KeyboardEvent| {
             let value = event.target_unchecked_into::<HtmlInputElement>().value();
+            let hotkey = if value.len() > 1 {
+                if let Some((hotkey, _extra)) = value.split_once(" ") {
+                    hotkey
+                } else {
+                    &value
+                }
+            } else {
+                &value
+            };
+
             let mut profile = profile.clone();
 
             // Check for hotkey, if it fails show search suggestions
-            if !profile.check_hotkey(&value) {
+            if !profile.check_hotkey(&hotkey) {
                 let proxy_for_auto = profile.proxy_for_auto.clone();
                 let update_suggestions = update_suggestions.clone();
                 wasm_bindgen_futures::spawn_local(async move {

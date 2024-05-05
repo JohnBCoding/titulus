@@ -15,7 +15,7 @@ pub fn saved(props: &Props) -> Html {
 
             match &command.command_type {
                 CommandType::Empty => {}
-                CommandType::Link(link) => {
+                CommandType::Link((link, _)) => {
                     // Open link in new window
                     let _window = web_sys::window()
                         .unwrap()
