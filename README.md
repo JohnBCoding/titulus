@@ -25,6 +25,10 @@ e.g. `google` <kbd>Enter</kbd> will search the configured search url for google 
 
 Auto complete results will also be displayed and can be cycled through with <kbd>Up</kbd> / <kbd>Down</kbd>
 
+**To access a site directly**, enter the URL and hit <kbd>Enter</kbd>
+
+e.g. `example.com` <kbd>Enter</kbd> will redirect you to [example.com](exmaple.com)
+
 ## Access
 
 I have a version hosted via GitHub pages at https://www.titulus.me/
