@@ -6,16 +6,21 @@ pub struct Profile {
     #[serde(default = "default_search")]
     pub search_template: String,
     #[serde(default = "default_proxy")]
-    pub proxy_for_auto: String,
+    pub proxies: Vec<String>,
+    pub current_proxy: usize,
 }
 
 fn default_search() -> String {
     "https://duckduckgo.com/?q={}".to_string()
 }
 
-fn default_proxy() -> String {
-    "https://corsproxy.io/?".to_string()
+fn default_proxy() -> Vec<String> {
+    vec![
+        "https://corsproxy.io/?".to_string(),
+        "https://thingproxy.freeboard.io/fetch/".to_string(),
+    ]
 }
+
 impl Profile {
     pub fn new() -> Self {
         let base_cmd = Command::new("Empty", CommandType::Empty, "");
@@ -25,7 +30,11 @@ impl Profile {
         Self {
             commands,
             search_template: "https://duckduckgo.com/?q={}".to_string(),
-            proxy_for_auto: "https://corsproxy.io/?".to_string(),
+            proxies: vec![
+                "https://corsproxy.io/?".to_string(),
+                "https://thingproxy.freeboard.io/fetch/".to_string(),
+            ],
+            current_proxy: 0,
         }
     }
 
@@ -41,5 +50,16 @@ impl Profile {
         });
 
         found
+    }
+
+    // Returns current proxy then updates to a new proxy.
+    pub fn get_random_proxy(&mut self) -> String {
+        let current = self.proxies[self.current_proxy].clone();
+        self.current_proxy += 1;
+        if self.current_proxy >= self.proxies.len() {
+            self.current_proxy = 0;
+        }
+
+        current
     }
 }

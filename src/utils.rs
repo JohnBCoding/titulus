@@ -1,5 +1,6 @@
 use crate::prelude::*;
 
+/// Saves given profile to browser local storage
 pub fn save(profile: &Profile) {
     let window = web_sys::window().unwrap().window();
     let storage = window.local_storage().unwrap().unwrap();
@@ -8,6 +9,7 @@ pub fn save(profile: &Profile) {
     let _ = storage.set("profile", &profile_str);
 }
 
+/// Loads profile from browser local storage
 pub fn load() -> Profile {
     let window = web_sys::window().unwrap().window();
     let storage = window.local_storage().unwrap().unwrap();

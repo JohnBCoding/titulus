@@ -130,7 +130,7 @@ pub fn hotkey_input(props: &Props) -> Html {
 
             // Check for hotkey, if it fails show search suggestions
             if !profile.check_hotkey(&hotkey) {
-                let proxy_for_auto = profile.proxy_for_auto.clone();
+                let proxy_for_auto = profile.get_random_proxy();
                 let update_suggestions = update_suggestions.clone();
                 wasm_bindgen_futures::spawn_local(async move {
                     let dd_uri =
