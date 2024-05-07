@@ -55,14 +55,13 @@ impl Profile {
     }
 
     // Returns current proxy then updates to a new proxy.
-    pub fn get_random_proxy(&mut self) -> String {
+    pub fn get_current_proxy(&mut self) -> String {
         let current = self.proxies[self.current_proxy].clone();
         self.current_proxy += 1;
         if self.current_proxy >= self.proxies.len() {
             self.current_proxy = 0;
         }
 
-        log!("{}", self.current_proxy);
         current
     }
 }

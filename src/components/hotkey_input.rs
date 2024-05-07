@@ -130,7 +130,17 @@ pub fn hotkey_input(props: &Props) -> Html {
 
             // Check for hotkey, if it fails show search suggestions
             if !profile.check_hotkey(&hotkey) {
-                let proxy_for_auto = profile.get_random_proxy();
+                // Otherwise it will search when cycling suggestions
+                // Need to just keep track of input state and compare for change
+                if event.key() == "ArrowUp"
+                    || event.key() == "ArrowDown"
+                    || event.key() == "ArrowRight"
+                    || event.key() == "ArrowLeft"
+                {
+                    return;
+                }
+
+                let proxy_for_auto = profile.get_current_proxy();
                 let update_suggestions = update_suggestions.clone();
                 wasm_bindgen_futures::spawn_local(async move {
                     let dd_uri =
