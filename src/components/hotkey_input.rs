@@ -14,6 +14,7 @@ pub struct Props {
 
 #[function_component(HotkeyInput)]
 pub fn hotkey_input(props: &Props) -> Html {
+    let suggestion_cooldown_state = use_state(|| false);
     let input_ref = use_node_ref();
 
     let _ = {
@@ -111,6 +112,7 @@ pub fn hotkey_input(props: &Props) -> Html {
     };
 
     let handle_hotkeys_highlight = {
+        let suggestion_cooldown_state = suggestion_cooldown_state.clone();
         let profile = props.profile.clone();
         let update_profile = props.update_profile.clone();
         let update_suggestions = props.update_suggestions.clone();
@@ -140,37 +142,48 @@ pub fn hotkey_input(props: &Props) -> Html {
                     return;
                 }
 
-                let proxy_for_auto = profile.get_current_proxy();
-                let update_suggestions = update_suggestions.clone();
-                wasm_bindgen_futures::spawn_local(async move {
-                    let dd_uri =
-                        format!("{}https://duckduckgo.com/ac/?q={}", &proxy_for_auto, value);
-                    let result = Request::get(&dd_uri).send().await;
+                if !*suggestion_cooldown_state {
+                    let proxy_for_auto = profile.get_current_proxy();
+                    let update_suggestions = update_suggestions.clone();
+                    wasm_bindgen_futures::spawn_local(async move {
+                        let dd_uri =
+                            format!("{}https://duckduckgo.com/ac/?q={}", &proxy_for_auto, value);
+                        let result = Request::get(&dd_uri).send().await;
 
-                    match result {
-                        Ok(res) => {
-                            if let Ok(suggestions) =
-                                res.json::<Vec<HashMap<String, String>>>().await
-                            {
-                                let suggestion_vec = suggestions
-                                    .iter()
-                                    .map(|suggestion| {
-                                        if let Some(value) = suggestion.get("phrase") {
-                                            value.to_string()
-                                        } else {
-                                            "".to_string()
-                                        }
-                                    })
-                                    .collect::<Vec<String>>();
+                        match result {
+                            Ok(res) => {
+                                if let Ok(suggestions) =
+                                    res.json::<Vec<HashMap<String, String>>>().await
+                                {
+                                    let suggestion_vec = suggestions
+                                        .iter()
+                                        .map(|suggestion| {
+                                            if let Some(value) = suggestion.get("phrase") {
+                                                value.to_string()
+                                            } else {
+                                                "".to_string()
+                                            }
+                                        })
+                                        .collect::<Vec<String>>();
 
-                                update_suggestions.emit(suggestion_vec);
+                                    update_suggestions.emit(suggestion_vec);
+                                }
+                            }
+                            Err(err) => {
+                                log!(format!("{:?}", err));
                             }
                         }
-                        Err(err) => {
-                            log!(format!("{:?}", err));
-                        }
-                    }
-                });
+                    });
+
+                    // Cooldown suggestions
+                    let suggestion_cooldown_state_move = suggestion_cooldown_state.clone();
+                    Timeout::new(1000, move || {
+                        suggestion_cooldown_state_move.set(false);
+                    })
+                    .forget();
+
+                    suggestion_cooldown_state.set(true);
+                }
             } else {
                 update_suggestions.emit(vec![]);
             }

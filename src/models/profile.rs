@@ -17,7 +17,6 @@ fn default_search() -> String {
 fn default_proxy() -> Vec<String> {
     vec![
         "https://corsproxy.io/?".to_string(),
-        "https://thingproxy.freeboard.io/fetch/".to_string(),
         "https://api.allorigins.win/raw?url=".to_string(),
     ]
 }
@@ -33,7 +32,6 @@ impl Profile {
             search_template: "https://duckduckgo.com/?q={}".to_string(),
             proxies: vec![
                 "https://corsproxy.io/?".to_string(),
-                "https://thingproxy.freeboard.io/fetch/".to_string(),
                 "https://api.allorigins.win/raw?url=".to_string(),
             ],
             current_proxy: 0,
