@@ -18,6 +18,7 @@ fn default_proxy() -> Vec<String> {
     vec![
         "https://corsproxy.io/?".to_string(),
         "https://thingproxy.freeboard.io/fetch/".to_string(),
+        "https://api.allorigins.win/raw?url=".to_string(),
     ]
 }
 
@@ -33,6 +34,7 @@ impl Profile {
             proxies: vec![
                 "https://corsproxy.io/?".to_string(),
                 "https://thingproxy.freeboard.io/fetch/".to_string(),
+                "https://api.allorigins.win/raw?url=".to_string(),
             ],
             current_proxy: 0,
         }
@@ -60,6 +62,7 @@ impl Profile {
             self.current_proxy = 0;
         }
 
+        log!("{}", self.current_proxy);
         current
     }
 }
