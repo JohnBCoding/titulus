@@ -4,6 +4,10 @@
 
 Titulus is a minimal browser homepage, heavily inspired by [tilde](https://github.com/xvvvyz/tilde/tree/main).
 
+
+https://github.com/JohnBCoding/titulus/assets/12802117/7d55b4de-5909-42ef-9443-522b11df2760
+
+
 ## Configure
 
 To configure the homepage, click the settings button or hit ESC to bring up the settings view.
