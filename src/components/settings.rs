@@ -11,6 +11,7 @@ pub struct Props {
 pub fn settings(props: &Props) -> Html {
     let command_index_state = use_state(|| 0);
     let reader_state = use_state(|| None);
+    let set_focus_state = use_state(|| true);
     let select_ref = use_node_ref();
     let command_type_ref = use_node_ref();
     let import_ref = use_node_ref();
@@ -18,8 +19,15 @@ pub fn settings(props: &Props) -> Html {
     let _ = {
         let select_ref = select_ref.clone();
         use_effect(move || {
-            let select = select_ref.cast::<HtmlDivElement>().unwrap();
-            let _ = select.focus();
+            // Timer needed here because of no cooldown on global hotkeys which is causing multi re-renders
+            if *set_focus_state {
+                Timeout::new(5, move || {
+                    let select = select_ref.cast::<HtmlDivElement>().unwrap();
+                    let _ = select.focus();
+                    set_focus_state.set(false);
+                })
+                .forget();
+            }
         })
     };
 
