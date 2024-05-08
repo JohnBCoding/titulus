@@ -54,14 +54,17 @@ pub fn hotkey_input(props: &Props) -> Html {
                 "Enter" => {
                     let value = event.target_unchecked_into::<HtmlInputElement>().value();
 
-                    let (hotkey, extra) = if value.len() > 1 {
+                    // This can be cleaned up into a func
+                    let (hotkey, search, path) = if value.len() > 1 {
                         if let Some((hotkey, extra)) = value.split_once(" ") {
-                            (hotkey, extra)
+                            (hotkey, extra, "")
+                        } else if let Some((hotkey, extra)) = value.split_once("/") {
+                            (hotkey, "", extra)
                         } else {
-                            (value.as_str(), "")
+                            (value.as_str(), "", "")
                         }
                     } else {
-                        (value.as_str(), "")
+                        (value.as_str(), "", "")
                     };
 
                     // Open url if it matches url format
@@ -76,11 +79,13 @@ pub fn hotkey_input(props: &Props) -> Html {
                         match &command.command_type {
                             CommandType::Empty => {}
                             CommandType::Link((link, search_template)) => {
-                                if extra.is_empty() {
+                                if search.is_empty() && path.is_empty() {
                                     open_link(link, true);
-                                } else {
-                                    let search_url = search_template.replace("{}", extra);
+                                } else if !search.is_empty() {
+                                    let search_url = search_template.replace("{}", search);
                                     open_link(&search_url, true);
+                                } else if !path.is_empty() {
+                                    open_link(&format!("{}/{}", link, path), true);
                                 }
                             }
                         }
@@ -118,8 +123,12 @@ pub fn hotkey_input(props: &Props) -> Html {
         let update_suggestions = props.update_suggestions.clone();
         Callback::from(move |event: KeyboardEvent| {
             let value = event.target_unchecked_into::<HtmlInputElement>().value();
+
+            // This can be cleaned up into a func
             let hotkey = if value.len() > 1 {
                 if let Some((hotkey, _extra)) = value.split_once(" ") {
+                    hotkey
+                } else if let Some((hotkey, _extra)) = value.split_once("/") {
                     hotkey
                 } else {
                     &value
