@@ -15,8 +15,9 @@ pub fn load() -> Profile {
     let storage = window.local_storage().unwrap().unwrap();
     if let Ok(profile_res) = storage.get("profile") {
         if let Some(profile_str) = profile_res {
-            let profile = serde_json::from_str(&profile_str).unwrap();
-            return profile;
+            if let Ok(profile) = serde_json::from_str(&profile_str) {
+                return profile;
+            }
         }
     }
 
