@@ -23,6 +23,17 @@ You can also change the default search option in the settings. Be sure to put `{
 e.g. if you have GitHub assigned to `g` then `g` + <kbd>Enter</kbd> will redirect you to
 GitHub
 
+**To search a site**, you must first set the search URL in the settings. then you can type a space after the hotkey followed by your
+search.
+
+e.g. if you have Reddit assigned to `r` then `r programming` <kbd>Enter</kbd>
+[Will search reddit for programming](https://www.reddit.com/search/?q=programming)
+
+**To go to a specific path on a site**, type the path after the hotkey
+
+e.g. if you have Reddit assigned to `r` then `r/r/programming` <kbd>Enter</kbd> will redirect you to
+[reddit.com/r/programming](https://www.reddit.com/r/programming)
+
 **If your input doesn't match a key**, a search will be triggered.
 
 e.g. `google` <kbd>Enter</kbd> will search the configured search url for google **(Default is DuckDuckGo)**
