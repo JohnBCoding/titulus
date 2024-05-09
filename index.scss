@@ -74,6 +74,10 @@ input {
     transition: background-color 0.25s ease-in-out;
 }
 
+select {
+    min-width: fit-content;
+}
+
 select:hover,
 input:hover {
     background-color: var(--accent);
@@ -237,6 +241,10 @@ input[type=file] {
 
 .settings-button::file-selector-button {
     display: none;
+}
+
+.settings-input-small {
+    max-width: 96px;
 }
 
 #hotkey-input {

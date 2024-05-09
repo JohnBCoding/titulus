@@ -220,11 +220,11 @@ pub fn settings(props: &Props) -> Html {
                 {command_options_html}
             </select>
             <div class="row">
-                <input value={format!("{}", &props.profile.commands[*command_index_state].name)} placeholder="Name" maxlength=24 onchange={&handle_on_change_name}/>
+                <input value={format!("{}", &props.profile.commands[*command_index_state].name)} class="expand-x" placeholder="Name" maxlength=24 onchange={&handle_on_change_name}/>
                 <select class="expand-x" ref={command_type_ref}>
                     <option value="link">{"Link"}</option>
                 </select>
-                <input value={format!("{}", &props.profile.commands[*command_index_state].hotkey)} placeholder="Hotkey" onkeypress={&handle_hotkey_key_press} />
+                <input value={format!("{}", &props.profile.commands[*command_index_state].hotkey)} class="settings-input-small" placeholder="Hotkey" onkeypress={&handle_hotkey_key_press} />
             </div>
             <div class="row">
                 {

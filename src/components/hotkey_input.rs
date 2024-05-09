@@ -186,7 +186,7 @@ pub fn hotkey_input(props: &Props) -> Html {
 
                     // Cooldown suggestions
                     let suggestion_cooldown_state_move = suggestion_cooldown_state.clone();
-                    Timeout::new(1000, move || {
+                    Timeout::new(500, move || {
                         suggestion_cooldown_state_move.set(false);
                     })
                     .forget();
