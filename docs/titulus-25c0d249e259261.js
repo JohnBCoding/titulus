@@ -230,14 +230,14 @@ function addBorrowedObject(obj) {
 }
 function __wbg_adapter_40(arg0, arg1, arg2) {
     try {
-        wasm.wasm_bindgen__convert__closures__invoke1_mut_ref__h707091f76fccccd1(arg0, arg1, addBorrowedObject(arg2));
+        wasm.wasm_bindgen__convert__closures__invoke1_mut_ref__he79b8fa1a53d1856(arg0, arg1, addBorrowedObject(arg2));
     } finally {
         heap[stack_pointer++] = undefined;
     }
 }
 
 function __wbg_adapter_43(arg0, arg1) {
-    wasm.wasm_bindgen__convert__closures__invoke0_mut__h3dd380d3b059b6b3(arg0, arg1);
+    wasm.wasm_bindgen__convert__closures__invoke0_mut__h027684c6d18dccf6(arg0, arg1);
 }
 
 function makeClosure(arg0, arg1, dtor, f) {
@@ -1066,7 +1066,7 @@ async function __wbg_init(input) {
     if (wasm !== undefined) return wasm;
 
     if (typeof input === 'undefined') {
-        input = new URL('titulus-4dc71665e9fb9496_bg.wasm', import.meta.url);
+        input = new URL('titulus-25c0d249e259261_bg.wasm', import.meta.url);
     }
     const imports = __wbg_get_imports();
 
