@@ -88,6 +88,7 @@ pub fn hotkey_input(props: &Props) -> Html {
                                     open_link(&format!("{}/{}", link, path), true);
                                 }
                             }
+                            CommandType::Text(text) => {}
                         }
                     } else {
                         // No command, so search instead

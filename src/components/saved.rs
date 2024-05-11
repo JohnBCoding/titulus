@@ -19,6 +19,7 @@ pub fn saved(props: &Props) -> Html {
                     // Open link in new window
                     open_link(link, true);
                 }
+                CommandType::Text(text) => {}
             }
         })
     };

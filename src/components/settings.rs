@@ -10,10 +10,10 @@ pub struct Props {
 #[function_component(Settings)]
 pub fn settings(props: &Props) -> Html {
     let command_index_state = use_state(|| 0);
+    let command_type_state = use_state(|| "".to_string());
     let reader_state = use_state(|| None);
     let set_focus_state = use_state(|| true);
     let select_ref = use_node_ref();
-    let command_type_ref = use_node_ref();
     let import_ref = use_node_ref();
 
     let _ = {
@@ -28,13 +28,6 @@ pub fn settings(props: &Props) -> Html {
                 })
                 .forget();
             }
-        })
-    };
-
-    let handle_on_click_container = {
-        Callback::from(move |_event: MouseEvent| {
-            // event.prevent_default();
-            // event.stop_propagation();
         })
     };
 
@@ -54,8 +47,8 @@ pub fn settings(props: &Props) -> Html {
     };
 
     let handle_on_change_name = {
-        let profile = props.profile.clone();
         let command_index_state = command_index_state.clone();
+        let profile = props.profile.clone();
         let update_profile = props.update_profile.clone();
         Callback::from(move |event: Event| {
             event.prevent_default();
@@ -66,6 +59,31 @@ pub fn settings(props: &Props) -> Html {
 
             save(&profile);
             update_profile.emit(profile);
+        })
+    };
+
+    let handle_on_change_type = {
+        let command_type_state = command_type_state.clone();
+        let command_index_state = command_index_state.clone();
+        let profile = props.profile.clone();
+        let update_profile = props.update_profile.clone();
+        Callback::from(move |event: Event| {
+            event.prevent_default();
+
+            let value = event.target_unchecked_into::<HtmlSelectElement>().value();
+            let mut profile = profile.clone();
+
+            let command_type = match value.as_str() {
+                "link" => CommandType::Link(("".to_string(), "".to_string())),
+                "text" => CommandType::Text("".to_string()),
+                _ => CommandType::Empty,
+            };
+
+            profile.commands[*command_index_state].command_type = command_type;
+
+            save(&profile);
+            update_profile.emit(profile);
+            command_type_state.set(value);
         })
     };
 
@@ -87,8 +105,8 @@ pub fn settings(props: &Props) -> Html {
     let handle_on_change_value = {
         let profile = props.profile.clone();
         let command_index_state = command_index_state.clone();
+        let command_type_state = command_type_state.clone();
         let update_profile = props.update_profile.clone();
-        let command_type_ref = command_type_ref.clone();
         Callback::from(move |event: Event| {
             event.prevent_default();
 
@@ -98,12 +116,10 @@ pub fn settings(props: &Props) -> Html {
                 CommandType::Link((_, search)) => search,
                 _ => "",
             };
-            let command_type_value = command_type_ref
-                .cast::<HtmlSelectElement>()
-                .unwrap()
-                .value();
+            let command_type_value = command_type_state.deref().clone();
             let command_type = match command_type_value.as_str() {
                 "link" => CommandType::Link((value, old_search.to_string())),
+                "text" => CommandType::Text(value),
                 _ => CommandType::Empty,
             };
             profile.commands[*command_index_state].command_type = command_type;
@@ -193,7 +209,6 @@ pub fn settings(props: &Props) -> Html {
         Callback::from(move |event: Event| {
             let input = event.target_unchecked_into::<HtmlInputElement>();
             let files = input.files().unwrap();
-
             let gloo_file = File::from(files.get(0).unwrap());
             let reader = { read_as_text(&gloo_file, handle_import_finish.clone()) };
             reader_state.set(Some(reader));
@@ -241,14 +256,15 @@ pub fn settings(props: &Props) -> Html {
     let export_str_url_encoded = encode(&export_str);
 
     html! {
-        <div class="settings-container col flex-center-x" onclick={&handle_on_click_container} >
+        <div class="settings-container col flex-center-x" >
             <select onchange={&handle_on_change_command} ref={select_ref}>
                 {command_options_html}
             </select>
             <div class="row mobile-col">
                 <input value={format!("{}", &props.profile.commands[*command_index_state].name)} class="expand-x" placeholder="Name" maxlength=24 onchange={&handle_on_change_name}/>
-                <select class="expand-x" ref={command_type_ref}>
+                <select class="expand-x" onchange={&handle_on_change_type}>
                     <option value="link">{"Link"}</option>
+                    <option value="text">{"Text"}</option>
                 </select>
                 <input value={format!("{}", &props.profile.commands[*command_index_state].hotkey)} placeholder="Hotkey" onkeypress={&handle_hotkey_key_press} />
             </div>
@@ -266,8 +282,15 @@ pub fn settings(props: &Props) -> Html {
                         CommandType::Link((url, search)) => {
                             html! {
                                 <>
-                                    <input value={url.clone()} class="expand-x" placeholder="Value" onchange={&handle_on_change_value} />
+                                    <input value={url.clone()} class="expand-x" placeholder="URL" onchange={&handle_on_change_value} />
                                     <input value={search.clone()} class="expand-x" placeholder="Search Template" onchange={&handle_on_change_link_search} />
+                                </>
+                            }
+                        },
+                        CommandType::Text(text) => {
+                            html!{
+                                <>
+                                    <input value={text.clone()} class="expand-x" placeholder="Value" onchange={&handle_on_change_value} />
                                 </>
                             }
                         }

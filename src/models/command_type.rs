@@ -4,4 +4,5 @@ use crate::prelude::*;
 pub enum CommandType {
     Empty,
     Link((String, String)),
+    Text(String),
 }
