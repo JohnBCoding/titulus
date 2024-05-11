@@ -32,10 +32,11 @@ pub fn content() -> Html {
         let suggestions_state = suggestions_state.clone();
         let popup_selected_state = popup_selected_state.clone();
         move |event: KeyboardEvent| match event.key().as_str() {
-            "Escape" => {
+            "Escape" => { // Toggle settings, clear suggestions
                 settings_state.set(!*settings_state);
+                suggestions_state.set(vec![]);
             }
-            "ArrowUp" => {
+            "ArrowUp" | "ArrowLeft" => { // Cycle suggestions left
                 if suggestions_state.is_empty() {
                     return;
                 }
@@ -49,7 +50,7 @@ pub fn content() -> Html {
 
                 popup_selected_state.set(popup_selected);
             }
-            "ArrowDown" => {
+            "ArrowDown" | "ArrowRight" => { // Cycle suggestions right
                 if suggestions_state.is_empty() {
                     return;
                 }
@@ -99,9 +100,12 @@ pub fn content() -> Html {
         .iter()
         .enumerate()
         .map(|(index, suggestion)| {
+            // Skip all past the first 3 items
             if index > 2 {
                 return html! {};
             }
+            
+            // Ref selected button
             if index+1 == *popup_selected_state {
                 html! {
                     <button value={format!("{}", suggestion)} class={"popup expand-x selected"} ref={&selected_ref}>{suggestion}</button>
