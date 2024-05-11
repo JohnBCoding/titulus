@@ -4,7 +4,7 @@
 
 Titulus is a minimal browser homepage, heavily inspired by [tilde](https://github.com/xvvvyz/tilde/tree/main).
 
-https://github.com/JohnBCoding/titulus/assets/12802117/3f1ec877-05de-46ad-b314-a37f4299de6e
+https://github.com/JohnBCoding/titulus/assets/12802117/b9ab5192-8085-4d01-86a1-b4b46908ca5c
 
 ## Configure
 
