@@ -202,6 +202,7 @@ pub fn settings(props: &Props) -> Html {
 
     let handle_on_change_theme = {
         let profile = props.profile.clone();
+        let update_profile = props.update_profile.clone();
         Callback::from(move |event: Event| {
             let value = event.target_unchecked_into::<HtmlSelectElement>().value();
             let index = value.parse::<usize>().unwrap_or_default();
@@ -209,6 +210,7 @@ pub fn settings(props: &Props) -> Html {
             let (theme_name, _) = profile.update_theme(index);
             save(&profile);
             update_data_theme(&theme_name);
+            update_profile.emit(profile);
         })
     };
 
