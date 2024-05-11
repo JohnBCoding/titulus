@@ -2,6 +2,7 @@ use crate::prelude::*;
 
 #[derive(Debug, Deserialize, Clone, PartialEq, Serialize)]
 pub struct Profile {
+    #[serde(default = "default_commands")]
     pub commands: Vec<Command>,
     #[serde(default = "default_search")]
     pub search_template: String,
@@ -17,12 +18,8 @@ pub struct Profile {
 
 impl Profile {
     pub fn new() -> Self {
-        let base_cmd = Command::new("Empty", CommandType::Empty, "");
-
-        let commands = vec![base_cmd; 16];
-
         Self {
-            commands,
+            commands: default_commands(),
             search_template: default_search(),
             proxies: default_proxies(),
             current_proxy: 0,
@@ -65,6 +62,11 @@ impl Profile {
 
         self.themes[self.current_theme].clone()
     }
+}
+
+fn default_commands() -> Vec<Command> {
+    let base_cmd = Command::new("Empty", CommandType::Empty, "");
+    vec![base_cmd; 16]
 }
 
 fn default_search() -> String {

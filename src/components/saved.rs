@@ -17,10 +17,7 @@ pub fn saved(props: &Props) -> Html {
                 CommandType::Empty => {}
                 CommandType::Link((link, _)) => {
                     // Open link in new window
-                    let _window = web_sys::window()
-                        .unwrap()
-                        .window()
-                        .open_with_url_and_target(link, "_blank");
+                    open_link(link, true);
                 }
             }
         })
