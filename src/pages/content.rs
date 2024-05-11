@@ -19,7 +19,10 @@ pub fn content() -> Html {
             mobile_state.set(false);
         }
 
-        profile_state.set(load());
+        let mut profile = load();
+        let (theme_name, _) = profile.update_theme(profile.current_theme);
+        update_data_theme(&theme_name);
+        profile_state.set(profile);
         load_state.set(false);
     }
 

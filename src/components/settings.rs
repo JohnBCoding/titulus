@@ -200,6 +200,18 @@ pub fn settings(props: &Props) -> Html {
         })
     };
 
+    let handle_on_change_theme = {
+        let profile = props.profile.clone();
+        Callback::from(move |event: Event| {
+            let value = event.target_unchecked_into::<HtmlSelectElement>().value();
+            let index = value.parse::<usize>().unwrap_or_default();
+            let mut profile = profile.clone();
+            let (theme_name, _) = profile.update_theme(index);
+            save(&profile);
+            update_data_theme(&theme_name);
+        })
+    };
+
     let command_options_html = props.profile
         .commands
         .iter()
@@ -207,6 +219,18 @@ pub fn settings(props: &Props) -> Html {
         .map(|(index, command)| {
             html! {
                 <option value={format!("{}", index)} ~selected={if index==*command_index_state{true} else {false}}>{format!("{} {}", index+1, command.name)}</option>
+            }
+        })
+        .collect::<Html>();
+
+    let theme_options_html = props
+        .profile
+        .themes
+        .iter()
+        .enumerate()
+        .map(|(index, theme)| {
+            html! {
+                <option value={format!("{}", index)} ~selected={index == props.profile.current_theme}>{&theme.1}</option>
             }
         })
         .collect::<Html>();
@@ -219,14 +243,14 @@ pub fn settings(props: &Props) -> Html {
             <select onchange={&handle_on_change_command} ref={select_ref}>
                 {command_options_html}
             </select>
-            <div class="row">
+            <div class="row mobile-col">
                 <input value={format!("{}", &props.profile.commands[*command_index_state].name)} class="expand-x" placeholder="Name" maxlength=24 onchange={&handle_on_change_name}/>
                 <select class="expand-x" ref={command_type_ref}>
                     <option value="link">{"Link"}</option>
                 </select>
-                <input value={format!("{}", &props.profile.commands[*command_index_state].hotkey)} class="settings-input-small" placeholder="Hotkey" onkeypress={&handle_hotkey_key_press} />
+                <input value={format!("{}", &props.profile.commands[*command_index_state].hotkey)} placeholder="Hotkey" onkeypress={&handle_hotkey_key_press} />
             </div>
-            <div class="row">
+            <div class="row mobile-col">
                 {
                     match &props.profile.commands[*command_index_state].command_type {
                         CommandType::Empty => {
@@ -248,7 +272,10 @@ pub fn settings(props: &Props) -> Html {
                     }
                 }
             </div>
-            <input value={format!("{}", &props.profile.search_template)} class="flex-end-y" placeholder="Search Template" onchange={&handle_on_change_search} />
+            <select class="flex-end-y" onchange={&handle_on_change_theme}>
+                {theme_options_html}
+            </select>
+            <input value={format!("{}", &props.profile.search_template)} placeholder="Search Template" onchange={&handle_on_change_search} />
             <div class="row">
                 <button class="settings-button" onclick={&handle_import_on_click}>{"Import Profile"}</button>
                 <input class="settings-button" type="file" onchange={&handle_import} ref={import_ref}/>

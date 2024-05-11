@@ -5,20 +5,14 @@ pub struct Profile {
     pub commands: Vec<Command>,
     #[serde(default = "default_search")]
     pub search_template: String,
-    #[serde(default = "default_proxy")]
+    #[serde(default = "default_proxies")]
     pub proxies: Vec<String>,
+    #[serde(default)]
     pub current_proxy: usize,
-}
-
-fn default_search() -> String {
-    "https://duckduckgo.com/?q={}".to_string()
-}
-
-fn default_proxy() -> Vec<String> {
-    vec![
-        "https://corsproxy.io/?".to_string(),
-        "https://api.allorigins.win/raw?url=".to_string(),
-    ]
+    #[serde(default = "default_themes")]
+    pub themes: Vec<(String, String)>,
+    #[serde(default)]
+    pub current_theme: usize,
 }
 
 impl Profile {
@@ -29,12 +23,11 @@ impl Profile {
 
         Self {
             commands,
-            search_template: "https://duckduckgo.com/?q={}".to_string(),
-            proxies: vec![
-                "https://corsproxy.io/?".to_string(),
-                "https://api.allorigins.win/raw?url=".to_string(),
-            ],
+            search_template: default_search(),
+            proxies: default_proxies(),
             current_proxy: 0,
+            themes: default_themes(),
+            current_theme: 0,
         }
     }
 
@@ -62,4 +55,35 @@ impl Profile {
 
         current
     }
+
+    // Updates current theme index then returns the theme at that index
+    pub fn update_theme(&mut self, new_index: usize) -> (String, String) {
+        self.current_theme = new_index;
+        if self.current_theme >= self.themes.len() {
+            self.current_theme = 0;
+        }
+
+        self.themes[self.current_theme].clone()
+    }
+}
+
+fn default_search() -> String {
+    "https://duckduckgo.com/?q={}".to_string()
+}
+
+fn default_proxies() -> Vec<String> {
+    vec![
+        "https://corsproxy.io/?".to_string(),
+        "https://api.allorigins.win/raw?url=".to_string(),
+    ]
+}
+
+fn default_themes() -> Vec<(String, String)> {
+    vec![
+        ("default".to_string(), "Default Theme".to_string()),
+        ("titanstone".to_string(), "Titanstone".to_string()),
+        ("lava-gb".to_string(), "Lava-GB".to_string()),
+        ("timeless-night".to_string(), "Timeless Night".to_string()),
+        ("vireo-4".to_string(), "Vireo-4".to_string()),
+    ]
 }

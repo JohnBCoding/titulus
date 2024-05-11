@@ -1,19 +1,43 @@
 /* || Start Vars */
 
-/* Base colors uses titanstone palette */
-/* https://lospec.com/palette-list/titanstone */
 :root {
+    /* https://lospec.com/palette-list/droplets */
+    --background: #0b1424;
+    --primary: #25375c;
+    --accent: #5c7391;
+    --text: #aec3d6;
+}
+
+[data-theme="titanstone"] {
+    /* https://lospec.com/palette-list/titanstone */
     --background: #150413;
     --primary: #4d4755;
     --accent: #000000;
     --text: #ffffd1;
 }
 
-[data-theme="custom"] {
-    --background: #000000;
-    --primary: #635c6d;
-    --accent: #150413;
-    --text: #ffffd1;
+[data-theme="lava-gb"] {
+    /* https://lospec.com/palette-list/lava-gb */
+    --background: #051f39;
+    --primary: #4a2480;
+    --accent: #c53a9d;
+    --text: #ff8e80;
+}
+
+[data-theme="timeless-night"] {
+    /* https://lospec.com/palette-list/timeless-night */
+    --background: #1b0d35;
+    --primary: #2f1c62;
+    --accent: #563482;
+    --text: #6f5d9d;
+}
+
+[data-theme="vireo-4"] {
+    /* https://lospec.com/palette-list/vireo-4 */
+    --background: #27393f;
+    --primary: #6f535b;
+    --accent: #649092;
+    --text: #cfc89d;
 }
 
 /* || End Vars */
@@ -53,11 +77,12 @@ button {
     height: 75px;
     cursor: pointer;
     padding: 0;
-    transition: background-color 0.25s ease-in-out;
+    transition: background-color 0.25s ease-in-out, border-color 0.25s ease-in-out;
 }
 
 button:hover {
     background-color: var(--accent);
+    border-color: var(--accent);
 }
 
 button:active {
@@ -78,12 +103,10 @@ select {
     min-width: fit-content;
 }
 
+select:focus,
 select:hover,
+input:focus,
 input:hover {
-    background-color: var(--accent);
-}
-
-input:focus {
     background-color: var(--accent);
 }
 
@@ -101,6 +124,10 @@ input[type=file] {
     display: flex;
     flex-direction: row;
     gap: 2px;
+}
+
+.mobile-col {
+    flex-direction: column;
 }
 
 .expand-x {
@@ -229,22 +256,21 @@ input[type=file] {
     border-radius: 8px;
     text-decoration: none;
     text-align: center;
+    line-height: 40px;
     width: 100%;
-    height: fit-content;
-    padding: 0.25em;
+    height: 40px;
+    transition: background-color 0.25s ease-in-out, border-color 0.25s ease-in-out;
 }
 
-.settings-button:hover {
+.settings-button:hover,
+.settings-button:focus {
     background-color: var(--accent);
-    transition: background-color 0.25s ease-in-out;
+    border-color: var(--accent);
+    outline: none;
 }
 
 .settings-button::file-selector-button {
     display: none;
-}
-
-.settings-input-small {
-    max-width: 96px;
 }
 
 #hotkey-input {
@@ -264,6 +290,10 @@ input[type=file] {
     button {
         width: 250px;
         height: 75px;
+    }
+
+    .mobile-col {
+        flex-direction: row;
     }
 
     .content-container {

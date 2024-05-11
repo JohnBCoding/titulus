@@ -58,3 +58,15 @@ pub fn has_protocol(url_str: &str) -> bool {
 
     reg.is_match(url_str)
 }
+
+// Updates data-theme of document with given value
+pub fn update_data_theme(theme: &str) {
+    let document_element = web_sys::window()
+        .unwrap()
+        .document()
+        .unwrap()
+        .document_element()
+        .unwrap();
+
+    let _ = document_element.set_attribute("data-theme", &theme);
+}
