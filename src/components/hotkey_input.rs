@@ -15,6 +15,7 @@ pub struct Props {
 #[function_component(HotkeyInput)]
 pub fn hotkey_input(props: &Props) -> Html {
     let suggestion_cooldown_state = use_state(|| false);
+    let clipboard = use_clipboard();
     let input_ref = use_node_ref();
 
     let _ = {
@@ -88,7 +89,9 @@ pub fn hotkey_input(props: &Props) -> Html {
                                     open_link(&format!("{}/{}", link, path), true);
                                 }
                             }
-                            CommandType::Text(text) => {}
+                            CommandType::Text(text) => {
+                                clipboard.write_text(text.clone());
+                            }
                         }
                     } else {
                         // No command, so search instead

@@ -10,7 +10,7 @@ pub struct Props {
 #[function_component(Settings)]
 pub fn settings(props: &Props) -> Html {
     let command_index_state = use_state(|| 0);
-    let command_type_state = use_state(|| "".to_string());
+    let command_type_state = use_state(|| props.profile.commands[0].command_type.to_string());
     let reader_state = use_state(|| None);
     let set_focus_state = use_state(|| true);
     let select_ref = use_node_ref();
@@ -263,8 +263,8 @@ pub fn settings(props: &Props) -> Html {
             <div class="row mobile-col">
                 <input value={format!("{}", &props.profile.commands[*command_index_state].name)} class="expand-x" placeholder="Name" maxlength=24 onchange={&handle_on_change_name}/>
                 <select class="expand-x" onchange={&handle_on_change_type}>
-                    <option value="link">{"Link"}</option>
-                    <option value="text">{"Text"}</option>
+                    <option value="link" ~selected={&props.profile.commands[*command_index_state].command_type.to_string()=="link"}>{"Link"}</option>
+                    <option value="text" ~selected={&props.profile.commands[*command_index_state].command_type.to_string()=="text"}>{"Text"}</option>
                 </select>
                 <input value={format!("{}", &props.profile.commands[*command_index_state].hotkey)} placeholder="Hotkey" onkeypress={&handle_hotkey_key_press} />
             </div>

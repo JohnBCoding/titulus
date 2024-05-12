@@ -7,6 +7,7 @@ pub struct Props {
 
 #[function_component(Saved)]
 pub fn saved(props: &Props) -> Html {
+    let clipboard = use_clipboard();
     let handle_on_click = {
         let command = props.command.clone();
         Callback::from(move |event: MouseEvent| {
@@ -19,7 +20,9 @@ pub fn saved(props: &Props) -> Html {
                     // Open link in new window
                     open_link(link, true);
                 }
-                CommandType::Text(text) => {}
+                CommandType::Text(text) => {
+                    clipboard.write_text(text.clone());
+                }
             }
         })
     };
